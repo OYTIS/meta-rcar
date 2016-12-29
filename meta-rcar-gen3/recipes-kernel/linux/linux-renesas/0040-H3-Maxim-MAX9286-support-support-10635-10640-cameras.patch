@@ -9,7 +9,7 @@ Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 ---
  drivers/media/i2c/soc_camera/Kconfig               |   32 +
  drivers/media/i2c/soc_camera/Makefile              |    4 +
- drivers/media/i2c/soc_camera/max9286_max9271.c     |  486 +++++++++
+ drivers/media/i2c/soc_camera/max9286_max9271.c     |  487 +++++++++
  drivers/media/i2c/soc_camera/max9286_max9271.h     |  231 ++++
  .../media/i2c/soc_camera/max9286_max9271_ov10635.c |  603 ++++++++++
  .../media/i2c/soc_camera/max9286_max9271_ov10635.h | 1149 ++++++++++++++++++++
@@ -22,7 +22,7 @@ Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
  drivers/media/platform/soc_camera/soc_mediabus.c   |   16 +
  include/media/drv-intf/soc_mediabus.h              |    3 +
  include/media/soc_camera.h                         |    1 +
- 15 files changed, 3618 insertions(+), 97 deletions(-)
+ 15 files changed, 3619 insertions(+), 97 deletions(-)
  create mode 100644 drivers/media/i2c/soc_camera/max9286_max9271.c
  create mode 100644 drivers/media/i2c/soc_camera/max9286_max9271.h
  create mode 100644 drivers/media/i2c/soc_camera/max9286_max9271_ov10635.c
@@ -89,10 +89,10 @@ index d0421fe..05944d8 100644
  obj-$(CONFIG_SOC_CAMERA_MT9T031)	+= mt9t031.o
 diff --git a/drivers/media/i2c/soc_camera/max9286_max9271.c b/drivers/media/i2c/soc_camera/max9286_max9271.c
 new file mode 100644
-index 0000000..ad011ff
+index 0000000..ee4aafd
 --- /dev/null
 +++ b/drivers/media/i2c/soc_camera/max9286_max9271.c
-@@ -0,0 +1,486 @@
+@@ -0,0 +1,487 @@
 +/*
 + * MAXIM R-Car H3 Demo board setup driver
 + *
@@ -282,6 +282,9 @@ index 0000000..ad011ff
 +	maxim_reg8_write(client, 0x01, maxim_map[0][idx] << 1);	/* MAX9286-CAM0 I2C */
 +	maxim_reg8_write(client, 0x00, maxim_map[1][idx] << 1);	/* MAX9271-CAM0 I2C new */
 +	usleep_range(2000, 2500);				/* wait 2ms */
++	/* put MAX9271 in configuration link state  */
++	client->addr = maxim_map[1][idx];			/* MAX9271-CAMx I2C new */
++	maxim_reg8_write(client, 0x04, 0x43);			/* enable reverse_control/conf_link */
 +#ifdef MAXIM_DUMP
 +	client->addr = maxim_map[0][idx];			/* MAX9286-CAMx I2C */
 +	maxim_max927x_dump_regs(client);
@@ -448,13 +451,11 @@ index 0000000..ad011ff
 +
 +	pwen = of_get_gpio(np, 0);
 +	if (pwen > 0) {
-+		err = gpio_request(pwen, dev_name(&client->dev));
-+		if (err) {
++		err = gpio_request_one(pwen, GPIOF_OUT_INIT_HIGH, dev_name(&client->dev));
++		if (err)
 +			dev_err(&client->dev, "cannot request PWEN gpio %d: %d\n", pwen, err);
-+		} else {
-+			gpio_direction_output(pwen, 1);
++		else
 +			mdelay(250);
-+		}
 +		/*
 +		 * Powered MCU IMI cameras need delay between power-on and R-Car access to avoid
 +		 * i2c bus conflicts since linux kernel does not support i2c multi-mastering,
