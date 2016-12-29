@@ -9,12 +9,12 @@ Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 ---
  drivers/media/i2c/soc_camera/Kconfig               |   32 +
  drivers/media/i2c/soc_camera/Makefile              |    4 +
- drivers/media/i2c/soc_camera/max9286_max9271.c     |  467 ++++++++
+ drivers/media/i2c/soc_camera/max9286_max9271.c     |  486 +++++++++
  drivers/media/i2c/soc_camera/max9286_max9271.h     |  231 ++++
- .../media/i2c/soc_camera/max9286_max9271_ov10635.c |  610 +++++++++++
+ .../media/i2c/soc_camera/max9286_max9271_ov10635.c |  603 ++++++++++
  .../media/i2c/soc_camera/max9286_max9271_ov10635.h | 1149 ++++++++++++++++++++
  .../media/i2c/soc_camera/max9286_max9271_ov106xx.c |   93 ++
- .../i2c/soc_camera/max9286_max9271_ov490_ov10640.c |  819 ++++++++++++++
+ .../i2c/soc_camera/max9286_max9271_ov490_ov10640.c |  810 ++++++++++++++
  .../i2c/soc_camera/max9286_max9271_ov490_ov10640.h |   35 +
  drivers/media/platform/soc_camera/rcar_csi2.c      |  159 ++-
  drivers/media/platform/soc_camera/rcar_vin.c       |   78 +-
@@ -22,7 +22,7 @@ Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
  drivers/media/platform/soc_camera/soc_mediabus.c   |   16 +
  include/media/drv-intf/soc_mediabus.h              |    3 +
  include/media/soc_camera.h                         |    1 +
- 15 files changed, 3615 insertions(+), 97 deletions(-)
+ 15 files changed, 3618 insertions(+), 97 deletions(-)
  create mode 100644 drivers/media/i2c/soc_camera/max9286_max9271.c
  create mode 100644 drivers/media/i2c/soc_camera/max9286_max9271.h
  create mode 100644 drivers/media/i2c/soc_camera/max9286_max9271_ov10635.c
@@ -89,10 +89,10 @@ index d0421fe..05944d8 100644
  obj-$(CONFIG_SOC_CAMERA_MT9T031)	+= mt9t031.o
 diff --git a/drivers/media/i2c/soc_camera/max9286_max9271.c b/drivers/media/i2c/soc_camera/max9286_max9271.c
 new file mode 100644
-index 0000000..65abd11
+index 0000000..ad011ff
 --- /dev/null
 +++ b/drivers/media/i2c/soc_camera/max9286_max9271.c
-@@ -0,0 +1,467 @@
+@@ -0,0 +1,486 @@
 +/*
 + * MAXIM R-Car H3 Demo board setup driver
 + *
@@ -402,12 +402,30 @@ index 0000000..65abd11
 +	return 0;
 +}
 +
++static int max9286_max9271_registered_async(struct v4l2_subdev *sd)
++{
++	struct max9286_max9271_priv *priv = v4l2_get_subdevdata(sd);
++	struct i2c_client *client = priv->client;
++	int idx, tmp_addr;
++
++	/* switch to GMSL serial_link for streaming video */
++	tmp_addr = client->addr;
++	idx = sd->grp_id + priv->offset;
++	client->addr = maxim_map[1][idx];	/* MAX9271-CAMx */
++	maxim_reg8_write(client, 0x04, 0x83);	/* enable reverse_control/serial_link */
++	usleep_range(2000, 2500);		/* wait 2ms after changing reverse_control */
++	client->addr = tmp_addr;
++
++	return 0;
++}
++
 +static struct v4l2_subdev_core_ops max9286_max9271_subdev_core_ops = {
 +#ifdef CONFIG_VIDEO_ADV_DEBUG
-+	.g_register	= max9286_max9271_g_register,
-+	.s_register	= max9286_max9271_s_register,
++	.g_register		= max9286_max9271_g_register,
++	.s_register		= max9286_max9271_s_register,
 +#endif
-+	.s_power	= max9286_max9271_s_power,
++	.s_power		= max9286_max9271_s_power,
++	.registered_async	= max9286_max9271_registered_async,
 +};
 +
 +static struct v4l2_subdev_ops max9286_max9271_subdev_ops = {
@@ -501,10 +519,11 @@ index 0000000..65abd11
 +	if (err < 0)
 +		goto out;
 +
-+	for (i= 0; i < 4; i++) {
++	for (i = 0; i < 4; i++) {
 +		v4l2_subdev_init(&priv->sd[i], &max9286_max9271_subdev_ops);
 +		priv->sd[i].owner = client->dev.driver->owner;
 +		priv->sd[i].dev = &client->dev;
++		priv->sd[i].grp_id = i;
 +		v4l2_set_subdevdata(&priv->sd[i], priv);
 +
 +		snprintf(priv->sd[i].name, V4L2_SUBDEV_NAME_SIZE, "%s %d-%04x",
@@ -525,7 +544,7 @@ index 0000000..65abd11
 +	struct max9286_max9271_priv *priv = i2c_get_clientdata(client);
 +	int i;
 +
-+	for (i= 0; i < 4; i++) {
++	for (i = 0; i < 4; i++) {
 +		v4l2_async_unregister_subdev(&priv->sd[i]);
 +		v4l2_device_unregister_subdev(&priv->sd[i]);
 +	}
@@ -800,10 +819,10 @@ index 0000000..988a04f
 \ No newline at end of file
 diff --git a/drivers/media/i2c/soc_camera/max9286_max9271_ov10635.c b/drivers/media/i2c/soc_camera/max9286_max9271_ov10635.c
 new file mode 100644
-index 0000000..4096629
+index 0000000..88e3054
 --- /dev/null
 +++ b/drivers/media/i2c/soc_camera/max9286_max9271_ov10635.c
-@@ -0,0 +1,610 @@
+@@ -0,0 +1,603 @@
 +/*
 + * MAXIM max9286-max9271 with OmniVision ov10635 sensor camera driver
 + *
@@ -1283,13 +1302,6 @@ index 0000000..4096629
 +
 +	dev_info(&client->dev, "ov10635 Product ID %x Manufacturer ID %x OTP_ID %02x:%02x:%02x:%02x:%02x:%02x\n",
 +		 pid, ver, priv->id[0], priv->id[1], priv->id[2], priv->id[3], priv->id[4], priv->id[5]);
-+
-+	/* switch to GMSL serial_link for streaming video */
-+	tmp_addr = client->addr;
-+	client->addr = maxim_map[1][cam_idx];	/* MAX9271-CAMx */
-+	maxim_reg8_write(client, 0x04, 0x83);	/* enable reverse_control/serial_link */
-+	usleep_range(2000, 2500);		/* wait 2ms after changing reverse_control */
-+	client->addr = tmp_addr;
 +
 +	return 0;
 +}
@@ -2670,10 +2682,10 @@ index 0000000..eea6d43
 +MODULE_LICENSE("GPL");
 diff --git a/drivers/media/i2c/soc_camera/max9286_max9271_ov490_ov10640.c b/drivers/media/i2c/soc_camera/max9286_max9271_ov490_ov10640.c
 new file mode 100644
-index 0000000..bce603c
+index 0000000..6fd0bbe
 --- /dev/null
 +++ b/drivers/media/i2c/soc_camera/max9286_max9271_ov490_ov10640.c
-@@ -0,0 +1,819 @@
+@@ -0,0 +1,810 @@
 +/*
 + * MAXIM max9286-max9271 with OmniVision ov490-ov10640 sensor camera driver
 + *
@@ -3252,7 +3264,7 @@ index 0000000..bce603c
 +
 +	if (priv->is_fixed_sensor) {
 +		dev_info(&client->dev, "ov490/ov10640 fixed-sensor res %dx%d\n", priv->width, priv->height);
-+		goto streamon;
++		return 0;
 +	}
 +
 +	/* setup I2C translator address */
@@ -3313,27 +3325,18 @@ index 0000000..bce603c
 +		return -EINVAL;
 +	}
 +
-+	ov490_otp_id_read(client);
-+
-+	dev_info(&client->dev, "ov490/ov10640 Product ID %x Manufacturer ID %x, rev 1%x, res %dx%d, dvp %dbit OTP_ID %02x:%02x:%02x:%02x:%02x:%02x\n",
-+		 pid, ver, 0xa + rev, priv->width, priv->height, priv->dvp_width, priv->id[0], priv->id[1], priv->id[2], priv->id[3], priv->id[4], priv->id[5]);
-+
 +	ret = ov490_set_regs(client, ov490_regs_wizard,
 +			     ARRAY_SIZE(ov490_regs_wizard));
 +	if (ret)
 +		return ret;
 +
-+streamon:
-+	/* switch to GMSL serial_link for streaming video */
-+	tmp_addr = client->addr;
-+	client->addr = maxim_map[1][cam_idx];	/* MAX9271-CAMx */
-+	maxim_reg8_write(client, 0x04, 0x83);	/* enable reverse_control/serial_link */
-+	usleep_range(2000, 2500);		/* wait 2ms after changing reverse_control */
-+	client->addr = tmp_addr;
++	ov490_otp_id_read(client);
++
++	dev_info(&client->dev, "ov490/ov10640 Product ID %x Manufacturer ID %x, rev 1%x, res %dx%d, dvp %dbit OTP_ID %02x:%02x:%02x:%02x:%02x:%02x\n",
++		 pid, ver, 0xa + rev, priv->width, priv->height, priv->dvp_width, priv->id[0], priv->id[1], priv->id[2], priv->id[3], priv->id[4], priv->id[5]);
 +
 +	return 0;
 +}
-+
 +
 +static int ov490_parse_dt(struct device_node *np, struct ov490_priv *priv)
 +{
