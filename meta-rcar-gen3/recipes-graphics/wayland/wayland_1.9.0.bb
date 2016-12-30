@@ -14,6 +14,10 @@ SRC_URI = "http://wayland.freedesktop.org/releases/${BPN}-${PV}.tar.xz"
 SRC_URI[md5sum] = "5e141b3f2a7005d6c89d6f233c87c317"
 SRC_URI[sha256sum] = "9c8770720aa0034479735f58a4dc4ca9b172ecfede28f5134312e135b7301efa"
 
+SRC_URI_append = " \
+    file://prevent-simultaneous-poll.patch \
+"
+
 EXTRA_OECONF_class-native = "--disable-documentation --disable-libraries"
 
 inherit autotools pkgconfig

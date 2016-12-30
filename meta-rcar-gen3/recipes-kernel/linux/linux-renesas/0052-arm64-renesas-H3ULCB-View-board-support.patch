@@ -7,13 +7,13 @@ H3ULCB.View suport with 10635/10640 cameras
 
 Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 ---
- arch/arm64/boot/dts/renesas/Makefile               |   3 +-
- .../arm64/boot/dts/renesas/r8a7795-h3ulcb-view.dts | 966 +++++++++++++++++++++
- 2 files changed, 968 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/renesas/Makefile               |    3 +-
+ .../arm64/boot/dts/renesas/r8a7795-h3ulcb-view.dts | 1005 ++++++++++++++++++++
+ 2 files changed, 1007 insertions(+), 1 deletion(-)
  create mode 100644 arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-view.dts
 
 diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
-index a8b373d..44cea84 100644
+index c8948588..6a2c09c 100644
 --- a/arch/arm64/boot/dts/renesas/Makefile
 +++ b/arch/arm64/boot/dts/renesas/Makefile
 @@ -1,5 +1,6 @@
@@ -26,10 +26,10 @@ index a8b373d..44cea84 100644
  always		:= $(dtb-y)
 diff --git a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-view.dts b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-view.dts
 new file mode 100644
-index 0000000..2b266cc
+index 0000000..2df3597
 --- /dev/null
 +++ b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-view.dts
-@@ -0,0 +1,968 @@
+@@ -0,0 +1,1005 @@
 +/*
 + * Device Tree Source for the H3ULCB.View board
 + *
@@ -438,9 +438,6 @@ index 0000000..2b266cc
 +				clock-lanes = <0>;
 +				data-lanes = <1 2 3 4>;
 +				remote-endpoint = <&vin0ep0>;
-+				ov106xx_out0: endpoint@ {
-+					remote-endpoint = <&csi2_40_in_ep>;
-+				};
 +			};
 +		};
 +	};
@@ -493,9 +490,6 @@ index 0000000..2b266cc
 +				clock-lanes = <0>;
 +				data-lanes = <1 2 3 4>;
 +				remote-endpoint = <&vin4ep0>;
-+				ov106xx_out4: endpoint@ {
-+					remote-endpoint = <&csi2_41_in_ep>;
-+				};
 +			};
 +		};
 +	};
@@ -549,6 +543,13 @@ index 0000000..2b266cc
 +		maxim,resetb-active-low;
 +		maxim,fsync-mode = "automatic";
 +		maxim,timeout = <10>;
++
++		port {
++			max9286_ep0: endpoint {
++				clock-lanes = <0>;
++				data-lanes = <1 2 3 4>;
++			};
++		};
 +	};
 +
 +	max9286-max9271@1 {
@@ -561,6 +562,13 @@ index 0000000..2b266cc
 +		maxim,resetb-active-low;
 +		maxim,fsync-mode = "automatic";
 +		maxim,timeout = <10>;
++
++		port {
++			max9286_ep1: endpoint {
++				clock-lanes = <0>;
++				data-lanes = <1 2 3 4>;
++			};
++		};
 +	};
 +};
 +
@@ -626,12 +634,16 @@ index 0000000..2b266cc
 +				virtual,channel = <0>;
 +				data-lanes = <1 2 3 4>;
 +				remote-endpoint = <&ov106xx_in0>;
-+
 +			};
 +		};
 +		port@1 {
 +			csi0ep0: endpoint {
 +				remote-endpoint = <&csi2_40_ep>;
++			};
++		};
++		port@2 {
++			des0ep0: endpoint {
++				remote-endpoint = <&max9286_ep0>;
 +			};
 +		};
 +	};
@@ -657,6 +669,11 @@ index 0000000..2b266cc
 +				remote-endpoint = <&csi2_40_ep>;
 +			};
 +		};
++		port@2 {
++			des0ep1: endpoint {
++				remote-endpoint = <&max9286_ep0>;
++			};
++		};
 +	};
 +};
 +
@@ -678,6 +695,11 @@ index 0000000..2b266cc
 +		port@1 {
 +			csi0ep2: endpoint {
 +				remote-endpoint = <&csi2_40_ep>;
++			};
++		};
++		port@2 {
++			des0ep2: endpoint {
++				remote-endpoint = <&max9286_ep0>;
 +			};
 +		};
 +	};
@@ -703,6 +725,11 @@ index 0000000..2b266cc
 +				remote-endpoint = <&csi2_40_ep>;
 +			};
 +		};
++		port@2 {
++			des0ep3: endpoint {
++				remote-endpoint = <&max9286_ep0>;
++			};
++		};
 +	};
 +};
 +
@@ -724,6 +751,11 @@ index 0000000..2b266cc
 +		port@1 {
 +			csi2ep0: endpoint {
 +				remote-endpoint = <&csi2_41_ep>;
++			};
++		};
++		port@2 {
++			des1ep0: endpoint {
++				remote-endpoint = <&max9286_ep1>;
 +			};
 +		};
 +	};
@@ -749,6 +781,11 @@ index 0000000..2b266cc
 +				remote-endpoint = <&csi2_41_ep>;
 +			};
 +		};
++		port@2 {
++			des1ep1: endpoint {
++				remote-endpoint = <&max9286_ep1>;
++			};
++		};
 +	};
 +};
 +
@@ -772,6 +809,11 @@ index 0000000..2b266cc
 +				remote-endpoint = <&csi2_41_ep>;
 +			};
 +		};
++		port@2 {
++			des1ep2: endpoint {
++				remote-endpoint = <&max9286_ep1>;
++			};
++		};
 +	};
 +};
 +
@@ -793,6 +835,11 @@ index 0000000..2b266cc
 +		port@1 {
 +			csi2ep3: endpoint {
 +				remote-endpoint = <&csi2_41_ep>;
++			};
++		};
++		port@2 {
++			des1ep3: endpoint {
++				remote-endpoint = <&max9286_ep1>;
 +			};
 +		};
 +	};
@@ -934,14 +981,9 @@ index 0000000..2b266cc
 +		#address-cells = <1>;
 +		#size-cells = <0>;
 +
-+		csi2_40_ep: endpoint@0 {
-+			remote-endpoint = <&vin0ep0>;
++		csi2_40_ep: endpoint {
 +			clock-lanes = <0>;
 +			data-lanes = <1 2 3 4>;
-+		};
-+
-+		csi2_40_in_ep: endpoint@1 {
-+			remote-endpoint = <&ov106xx_out0>;
 +		};
 +	};
 +};
@@ -975,14 +1017,9 @@ index 0000000..2b266cc
 +		#address-cells = <1>;
 +		#size-cells = <0>;
 +
-+		csi2_41_ep: endpoint@0 {
-+			remote-endpoint = <&vin4ep0>;
++		csi2_41_ep: endpoint {
 +			clock-lanes = <0>;
 +			data-lanes = <1 2 3 4>;
-+		};
-+
-+		csi2_41_in_ep: endpoint@1 {
-+			remote-endpoint = <&ov106xx_out4>;
 +		};
 +	};
 +};
@@ -996,14 +1033,6 @@ index 0000000..2b266cc
 +};
 +
 +&vspi0 {
-+	status = "okay";
-+};
-+
-+&vspi1 {
-+	status = "okay";
-+};
-+
-+&vspi2 {
 +	status = "okay";
 +};
 -- 

@@ -8,12 +8,12 @@ Add support for H3ULCB HAD board
 Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 ---
  arch/arm64/boot/dts/renesas/Makefile               |    2 +-
- arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-had.dts | 1132 ++++++++++++++++++++
- 2 files changed, 1133 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-had.dts | 1179 ++++++++++++++++++++
+ 2 files changed, 1180 insertions(+), 1 deletion(-)
  create mode 100644 arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-had.dts
 
 diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
-index d397b11..a8b373d 100644
+index c44c810..c8948588 100644
 --- a/arch/arm64/boot/dts/renesas/Makefile
 +++ b/arch/arm64/boot/dts/renesas/Makefile
 @@ -1,5 +1,5 @@
@@ -25,10 +25,10 @@ index d397b11..a8b373d 100644
  always		:= $(dtb-y)
 diff --git a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-had.dts b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-had.dts
 new file mode 100644
-index 0000000..87f0f4a
+index 0000000..b8b29c9
 --- /dev/null
 +++ b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-had.dts
-@@ -0,0 +1,1142 @@
+@@ -0,0 +1,1179 @@
 +/*
 + * Device Tree Source for the H3ULCB.HAD board
 + *
@@ -552,9 +552,6 @@ index 0000000..87f0f4a
 +				clock-lanes = <0>;
 +				data-lanes = <1 2 3 4>;
 +				remote-endpoint = <&vin0ep0>;
-+				ov106xx_out0: endpoint@ {
-+					remote-endpoint = <&csi2_40_in_ep>;
-+				};
 +			};
 +		};
 +	};
@@ -607,9 +604,6 @@ index 0000000..87f0f4a
 +				clock-lanes = <0>;
 +				data-lanes = <1 2 3 4>;
 +				remote-endpoint = <&vin4ep0>;
-+				ov106xx_out4: endpoint@ {
-+					remote-endpoint = <&csi2_41_in_ep>;
-+				};
 +			};
 +		};
 +	};
@@ -663,6 +657,13 @@ index 0000000..87f0f4a
 +		maxim,resetb-active-low;
 +		maxim,fsync-mode = "automatic";
 +		maxim,timeout = <10>;
++
++		port {
++			max9286_ep0: endpoint {
++				clock-lanes = <0>;
++				data-lanes = <1 2 3 4>;
++			};
++		};
 +	};
 +
 +	max9286-max9271@1 {
@@ -675,6 +676,13 @@ index 0000000..87f0f4a
 +		maxim,resetb-active-low;
 +		maxim,fsync-mode = "automatic";
 +		maxim,timeout = <10>;
++
++		port {
++			max9286_ep1: endpoint {
++				clock-lanes = <0>;
++				data-lanes = <1 2 3 4>;
++			};
++		};
 +	};
 +};
 +
@@ -866,12 +874,16 @@ index 0000000..87f0f4a
 +				virtual,channel = <0>;
 +				data-lanes = <1 2 3 4>;
 +				remote-endpoint = <&ov106xx_in0>;
-+
 +			};
 +		};
 +		port@1 {
 +			csi0ep0: endpoint {
 +				remote-endpoint = <&csi2_40_ep>;
++			};
++		};
++		port@2 {
++			des0ep0: endpoint {
++				remote-endpoint = <&max9286_ep0>;
 +			};
 +		};
 +	};
@@ -897,6 +909,11 @@ index 0000000..87f0f4a
 +				remote-endpoint = <&csi2_40_ep>;
 +			};
 +		};
++		port@2 {
++			des0ep1: endpoint {
++				remote-endpoint = <&max9286_ep0>;
++			};
++		};
 +	};
 +};
 +
@@ -918,6 +935,11 @@ index 0000000..87f0f4a
 +		port@1 {
 +			csi0ep2: endpoint {
 +				remote-endpoint = <&csi2_40_ep>;
++			};
++		};
++		port@2 {
++			des0ep2: endpoint {
++				remote-endpoint = <&max9286_ep0>;
 +			};
 +		};
 +	};
@@ -943,6 +965,11 @@ index 0000000..87f0f4a
 +				remote-endpoint = <&csi2_40_ep>;
 +			};
 +		};
++		port@2 {
++			des0ep3: endpoint {
++				remote-endpoint = <&max9286_ep0>;
++			};
++		};
 +	};
 +};
 +
@@ -964,6 +991,11 @@ index 0000000..87f0f4a
 +		port@1 {
 +			csi2ep0: endpoint {
 +				remote-endpoint = <&csi2_41_ep>;
++			};
++		};
++		port@2 {
++			des1ep0: endpoint {
++				remote-endpoint = <&max9286_ep1>;
 +			};
 +		};
 +	};
@@ -989,6 +1021,11 @@ index 0000000..87f0f4a
 +				remote-endpoint = <&csi2_41_ep>;
 +			};
 +		};
++		port@2 {
++			des1ep1: endpoint {
++				remote-endpoint = <&max9286_ep1>;
++			};
++		};
 +	};
 +};
 +
@@ -1012,6 +1049,11 @@ index 0000000..87f0f4a
 +				remote-endpoint = <&csi2_41_ep>;
 +			};
 +		};
++		port@2 {
++			des1ep2: endpoint {
++				remote-endpoint = <&max9286_ep1>;
++			};
++		};
 +	};
 +};
 +
@@ -1033,6 +1075,11 @@ index 0000000..87f0f4a
 +		port@1 {
 +			csi2ep3: endpoint {
 +				remote-endpoint = <&csi2_41_ep>;
++			};
++		};
++		port@2 {
++			des1ep3: endpoint {
++				remote-endpoint = <&max9286_ep1>;
 +			};
 +		};
 +	};
@@ -1067,14 +1114,9 @@ index 0000000..87f0f4a
 +		#address-cells = <1>;
 +		#size-cells = <0>;
 +
-+		csi2_40_ep: endpoint@0 {
-+			remote-endpoint = <&vin0ep0>;
++		csi2_40_ep: endpoint {
 +			clock-lanes = <0>;
 +			data-lanes = <1 2 3 4>;
-+		};
-+
-+		csi2_40_in_ep: endpoint@1 {
-+			remote-endpoint = <&ov106xx_out0>;
 +		};
 +	};
 +};
@@ -1108,14 +1150,9 @@ index 0000000..87f0f4a
 +		#address-cells = <1>;
 +		#size-cells = <0>;
 +
-+		csi2_41_ep: endpoint@0 {
-+			remote-endpoint = <&vin4ep0>;
++		csi2_41_ep: endpoint {
 +			clock-lanes = <0>;
 +			data-lanes = <1 2 3 4>;
-+		};
-+
-+		csi2_41_in_ep: endpoint@1 {
-+			remote-endpoint = <&ov106xx_out4>;
 +		};
 +	};
 +};

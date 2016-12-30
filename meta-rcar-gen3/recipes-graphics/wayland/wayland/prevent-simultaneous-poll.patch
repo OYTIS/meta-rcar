@@ -1,0 +1,33 @@
+--- a/src/wayland-client.c	2015-08-24 20:38:19.000000000 -0700
++++ b/src/wayland-client.c	2016-12-14 19:40:02.588094661 -0800
+@@ -1546,6 +1546,7 @@ wl_display_dispatch_queue(struct wl_disp
+ 
+ 	pthread_mutex_lock(&display->mutex);
+ 
++repeat:
+ 	ret = dispatch_queue(display, queue);
+ 	if (ret == -1)
+ 		goto err_unlock;
+@@ -1564,7 +1565,21 @@ wl_display_dispatch_queue(struct wl_disp
+ 		goto err_unlock;
+ 	}
+ 
+-	display->reader_count++;
++	/* ...it may happen other thread has already taken the reader role,
++	 * so we shouldn't proceed with polling to prevent simultaneous polling
++	 * from two threads; check current reader count, and force waiting on
++	 * conditional if it is not zero. */
++	if (display->reader_count > 0) {
++       	uint32_t serial = display->read_serial;
++		while (display->read_serial == serial)
++			pthread_cond_wait(&display->reader_cond, &display->mutex);
++
++		/* ...repeat dispatching attempt */
++		goto repeat;
++	} else {
++		/* ...we are first reader and need to go to a poll */
++		display->reader_count++;
++	}
+ 
+ 	pthread_mutex_unlock(&display->mutex);
+ 

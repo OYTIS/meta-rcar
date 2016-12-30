@@ -64,3 +64,5 @@ FILES_${PN}-dev = " \
 "
 
 RPROVIDES_${PN} += "kernel-module-vspmif kernel-module-vspm-if"
+
+KERNEL_MODULE_AUTOLOAD = "vspm_if"

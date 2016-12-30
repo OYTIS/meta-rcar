@@ -13,6 +13,11 @@ PACKAGE_ARCH = "${MACHINE_ARCH}"
 
 SRC_URI_r8a7795 = 'file://GSX_KM_H3.tar.bz2'
 SRC_URI_r8a7796 = 'file://GSX_KM_M3.tar.bz2'
+
+SRC_URI_append_r8a7795 = " \
+    file://clockfreq-fix-out-of-bounds-access.patch \
+"
+
 S = "${WORKDIR}/rogue_km"
 
 KBUILD_DIR_r8a7795 = "${S}/build/linux/r8a7795_linux"

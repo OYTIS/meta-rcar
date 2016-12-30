@@ -60,3 +60,5 @@ module_clean_symbol() {
 }
 
 RPROVIDES_${PN} += "kernel-module-uvcs"
+
+KERNEL_MODULE_AUTOLOAD = "uvcs_drv"

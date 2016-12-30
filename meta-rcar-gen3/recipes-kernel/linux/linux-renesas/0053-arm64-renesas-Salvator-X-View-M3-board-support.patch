@@ -8,8 +8,8 @@ Salvator-X.View M3 suport with 10635/10640 cameras
 Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 ---
  arch/arm64/boot/dts/renesas/Makefile               |    3 +-
- .../boot/dts/renesas/r8a7796-salvator-x-view.dts   | 1132 ++++++++++++++++++++
- 2 files changed, 1134 insertions(+), 1 deletion(-)
+ .../boot/dts/renesas/r8a7796-salvator-x-view.dts   | 1165 ++++++++++++++++++++
+ 2 files changed, 1167 insertions(+), 1 deletion(-)
  create mode 100644 arch/arm64/boot/dts/renesas/r8a7796-salvator-x-view.dts
 
 diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
@@ -28,10 +28,10 @@ index 6a2c09c..377524f 100644
  clean-files	:= *.dtb
 diff --git a/arch/arm64/boot/dts/renesas/r8a7796-salvator-x-view.dts b/arch/arm64/boot/dts/renesas/r8a7796-salvator-x-view.dts
 new file mode 100644
-index 0000000..3a1ef51
+index 0000000..01bf189d
 --- /dev/null
 +++ b/arch/arm64/boot/dts/renesas/r8a7796-salvator-x-view.dts
-@@ -0,0 +1,1142 @@
+@@ -0,0 +1,1165 @@
 +/*
 + * Device Tree Source for the Salvator-X board
 + *
@@ -625,9 +625,6 @@ index 0000000..3a1ef51
 +				clock-lanes = <0>;
 +				data-lanes = <1 2 3 4>;
 +				remote-endpoint = <&vin0ep0>;
-+				ov106xx_out0: endpoint@ {
-+					remote-endpoint = <&csi2_40_in_ep>;
-+				};
 +			};
 +		};
 +	};
@@ -680,9 +677,6 @@ index 0000000..3a1ef51
 +				clock-lanes = <0>;
 +				data-lanes = <1 2 3 4>;
 +				remote-endpoint = <&vin4ep0>;
-+				ov106xx_out4: endpoint@ {
-+					remote-endpoint = <&csi2_20_in_ep>;
-+				};
 +			};
 +		};
 +	};
@@ -697,6 +691,13 @@ index 0000000..3a1ef51
 +		maxim,resetb-active-low;
 +		maxim,fsync-mode = "automatic";
 +		maxim,timeout = <10>;
++
++		port {
++			max9286_ep0: endpoint {
++				clock-lanes = <0>;
++				data-lanes = <1 2 3 4>;
++			};
++		};
 +	};
 +
 +	max9286-max9271@1 {
@@ -708,6 +709,13 @@ index 0000000..3a1ef51
 +		maxim,resetb-active-low;
 +		maxim,fsync-mode = "automatic";
 +		maxim,timeout = <10>;
++
++		port {
++			max9286_ep1: endpoint {
++				clock-lanes = <0>;
++				data-lanes = <1>;
++			};
++		};
 +	};
 +
 +	clk_5p49v5923a: programmable_clk@6a {
@@ -990,6 +998,11 @@ index 0000000..3a1ef51
 +				remote-endpoint = <&csi2_40_ep>;
 +			};
 +		};
++		port@2 {
++			des0ep0: endpoint {
++				remote-endpoint = <&max9286_ep0>;
++			};
++		};
 +	};
 +};
 +
@@ -1011,6 +1024,11 @@ index 0000000..3a1ef51
 +		port@1 {
 +			csi0ep1: endpoint {
 +				remote-endpoint = <&csi2_40_ep>;
++			};
++		};
++		port@2 {
++			des0ep1: endpoint {
++				remote-endpoint = <&max9286_ep0>;
 +			};
 +		};
 +	};
@@ -1036,6 +1054,11 @@ index 0000000..3a1ef51
 +				remote-endpoint = <&csi2_40_ep>;
 +			};
 +		};
++		port@2 {
++			des0ep2: endpoint {
++				remote-endpoint = <&max9286_ep0>;
++			};
++		};
 +	};
 +};
 +
@@ -1059,6 +1082,11 @@ index 0000000..3a1ef51
 +				remote-endpoint = <&csi2_40_ep>;
 +			};
 +		};
++		port@2 {
++			des0ep3: endpoint {
++				remote-endpoint = <&max9286_ep0>;
++			};
++		};
 +	};
 +};
 +
@@ -1074,12 +1102,17 @@ index 0000000..3a1ef51
 +				csi,select = "csi41";
 +				virtual,channel = <0>;
 +				remote-endpoint = <&ov106xx_in4>;
-+				data-lanes = <1 2 3 4>;
++				data-lanes = <1>;
 +			};
 +		};
 +		port@1 {
 +			csi2ep0: endpoint {
 +				remote-endpoint = <&csi2_20_ep>;
++			};
++		};
++		port@2 {
++			des1ep0: endpoint {
++				remote-endpoint = <&max9286_ep1>;
 +			};
 +		};
 +	};
@@ -1114,14 +1147,9 @@ index 0000000..3a1ef51
 +		#address-cells = <1>;
 +		#size-cells = <0>;
 +
-+		csi2_40_ep: endpoint@0 {
-+			remote-endpoint = <&vin0ep0>;
++		csi2_40_ep: endpoint {
 +			clock-lanes = <0>;
 +			data-lanes = <1 2 3 4>;
-+		};
-+
-+		csi2_40_in_ep: endpoint@1 {
-+			remote-endpoint = <&ov106xx_out0>;
 +		};
 +	};
 +};
@@ -1155,14 +1183,9 @@ index 0000000..3a1ef51
 +		#address-cells = <1>;
 +		#size-cells = <0>;
 +
-+		csi2_20_ep: endpoint@0 {
-+			remote-endpoint = <&vin4ep0>;
++		csi2_20_ep: endpoint {
 +			clock-lanes = <0>;
 +			data-lanes = <1>;
-+		};
-+
-+		csi2_20_in_ep: endpoint@1 {
-+			remote-endpoint = <&ov106xx_out4>;
 +		};
 +	};
 +};
