@@ -1,6 +1,4 @@
 require include/iccom-control.inc
-# common
-inherit multilib_sdk
 
 # Basic packages
 IMAGE_INSTALL_append_rcar-gen3 = " \
