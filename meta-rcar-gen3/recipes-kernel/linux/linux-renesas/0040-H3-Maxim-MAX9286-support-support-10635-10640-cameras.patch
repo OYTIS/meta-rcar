@@ -92,7 +92,7 @@ new file mode 100644
 index 0000000..ee4aafd
 --- /dev/null
 +++ b/drivers/media/i2c/soc_camera/max9286_max9271.c
-@@ -0,0 +1,487 @@
+@@ -0,0 +1,488 @@
 +/*
 + * MAXIM R-Car H3 Demo board setup driver
 + *
@@ -285,6 +285,7 @@ index 0000000..ee4aafd
 +	/* put MAX9271 in configuration link state  */
 +	client->addr = maxim_map[1][idx];			/* MAX9271-CAMx I2C new */
 +	maxim_reg8_write(client, 0x04, 0x43);			/* enable reverse_control/conf_link */
++	usleep_range(2000, 2500);				/* wait 2ms */
 +#ifdef MAXIM_DUMP
 +	client->addr = maxim_map[0][idx];			/* MAX9286-CAMx I2C */
 +	maxim_max927x_dump_regs(client);
