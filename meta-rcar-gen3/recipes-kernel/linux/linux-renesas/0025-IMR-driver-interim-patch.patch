@@ -1163,9 +1163,9 @@ index 0000000..3355f50
 +
 +			/* ...verify source/destination image dimensions */
 +			if (V4L2_TYPE_IS_OUTPUT(f->type))
-+				v4l_bound_align_image(&pix->width, 128, 2048, 7, &pix->height, 16, 2048, 1, 0);
++				v4l_bound_align_image(&pix->width, 128, 2048, 7, &pix->height, 1, 2048, 0, 0);
 +			else
-+				v4l_bound_align_image(&pix->width, 64, 2048, 6, &pix->height, 16, 2048, 1, 0);
++				v4l_bound_align_image(&pix->width, 64, 2048, 6, &pix->height, 1, 2048, 0, 0);
 +
 +			return i;
 +		}
