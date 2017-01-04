@@ -21,6 +21,10 @@ SoCs that Renesas build. Layer and board that supports following:
         - Renesas Electronics Corporation. M3ULCB (R8A7796)
         - Renesas Electronics Corporation. M3ULCB.View (R8A7796)
 
+    * meta-rcar-gen2
+        - Renesas Electronics Corporation. Wheat (R8A7792)
+        - Renesas Electronics Corporation. Blanche (R8A7792)
+
 Please see README in the layer directory about the description of the board.
 
 Original BSP image
