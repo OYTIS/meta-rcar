@@ -1,4 +1,4 @@
-require ../../include/gles-control.inc
+require include/gles-control.inc
 
 DESCRIPTION = "SGX/RGX user module"
 LICENSE = "CLOSED"
