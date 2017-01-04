@@ -1,5 +1,4 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
-
 SRC_URI_rcar-gen2 = " \
     git://github.com/renesas-rcar/weston.git;protocol=git;branch=rcar-gen3/1.9.0/v4l2-renderer \
     file://weston.png \
@@ -31,6 +30,8 @@ S = "${WORKDIR}/git"
 PACKAGECONFIG_append = " \
     ${@base_conditional('USE_MULTIMEDIA', '1', ' v4l2', '', d)} \
 "
+
+DEPENDS_append = "${@base_conditional('USE_MULTIMEDIA', '1', ' wayland-kms', '', d)}"
 
 PACKAGECONFIG[v4l2] = " --enable-v4l2,,libmediactl-v4l2,kernel-module-vsp2"
 
