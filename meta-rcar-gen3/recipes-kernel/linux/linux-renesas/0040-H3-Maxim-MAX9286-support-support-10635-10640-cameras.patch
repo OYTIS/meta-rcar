@@ -1,6 +1,6 @@
-From eb013830e4c4bffae5aa815977f6fe05ba5d05ed Mon Sep 17 00:00:00 2001
+From aba07cf4de708da1aff90b26184b13e72683eee4 Mon Sep 17 00:00:00 2001
 From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Date: Wed, 4 Jan 2017 02:00:00 +0300
+Date: Wed, 4 Jan 2017 15:31:41 +0300
 Subject: [PATCH] H3 Maxim MAX9286 support: support 10635/10640 cameras
 
 H3 Maxim MAX9286 support: support 10635/10640 cameras on YoctoV2120
@@ -9,12 +9,12 @@ Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 ---
  drivers/media/i2c/soc_camera/Kconfig               |   37 +
  drivers/media/i2c/soc_camera/Makefile              |    4 +
- drivers/media/i2c/soc_camera/max9271_ov10635.c     |  639 +++++++++++
+ drivers/media/i2c/soc_camera/max9271_ov10635.c     |  638 +++++++++++
  drivers/media/i2c/soc_camera/max9271_ov10635.h     | 1149 ++++++++++++++++++++
  drivers/media/i2c/soc_camera/max9271_ov106xx.c     |   84 ++
- .../media/i2c/soc_camera/max9271_ov490_ov10640.c   |  891 +++++++++++++++
- .../media/i2c/soc_camera/max9271_ov490_ov10640.h   |   35 +
- drivers/media/i2c/soc_camera/max9286_max9271.c     |  476 ++++++++
+ .../media/i2c/soc_camera/max9271_ov490_ov10640.c   |  890 +++++++++++++++
+ .../media/i2c/soc_camera/max9271_ov490_ov10640.h   |   32 +
+ drivers/media/i2c/soc_camera/max9286_max9271.c     |  478 ++++++++
  drivers/media/i2c/soc_camera/max9286_max9271.h     |  210 ++++
  .../i2c/soc_camera/max9286_max9271_ov10635_debug.h |   54 +
  drivers/media/platform/soc_camera/rcar_csi2.c      |  159 ++-
@@ -23,7 +23,7 @@ Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
  drivers/media/platform/soc_camera/soc_mediabus.c   |   16 +
  include/media/drv-intf/soc_mediabus.h              |    3 +
  include/media/soc_camera.h                         |    1 +
- 16 files changed, 3754 insertions(+), 97 deletions(-)
+ 16 files changed, 3751 insertions(+), 97 deletions(-)
  create mode 100644 drivers/media/i2c/soc_camera/max9271_ov10635.c
  create mode 100644 drivers/media/i2c/soc_camera/max9271_ov10635.h
  create mode 100644 drivers/media/i2c/soc_camera/max9271_ov106xx.c
@@ -31,7 +31,7 @@ Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
  create mode 100644 drivers/media/i2c/soc_camera/max9271_ov490_ov10640.h
  create mode 100644 drivers/media/i2c/soc_camera/max9286_max9271.c
  create mode 100644 drivers/media/i2c/soc_camera/max9286_max9271.h
- create mode 100755 drivers/media/i2c/soc_camera/max9286_max9271_ov10635_debug.h
+ create mode 100644 drivers/media/i2c/soc_camera/max9286_max9271_ov10635_debug.h
 
 diff --git a/drivers/media/i2c/soc_camera/Kconfig b/drivers/media/i2c/soc_camera/Kconfig
 index 23d352f..9128f63 100644
@@ -96,10 +96,10 @@ index d0421fe..a0b695a5 100644
  obj-$(CONFIG_SOC_CAMERA_MT9T031)	+= mt9t031.o
 diff --git a/drivers/media/i2c/soc_camera/max9271_ov10635.c b/drivers/media/i2c/soc_camera/max9271_ov10635.c
 new file mode 100644
-index 0000000..548aa69
+index 0000000..95eddfd
 --- /dev/null
 +++ b/drivers/media/i2c/soc_camera/max9271_ov10635.c
-@@ -0,0 +1,639 @@
+@@ -0,0 +1,638 @@
 +/*
 + * MAXIM max9271 with OmniVision ov10635 sensor camera driver
 + *
@@ -163,14 +163,13 @@ index 0000000..548aa69
 +static int ov10635_set_regs(struct i2c_client *client,
 +			    const struct ov10635_reg *regs, int nr_regs)
 +{
-+	int i, ret;
++	int i;
 +
 +	for (i = 0; i < nr_regs; i++) {
-+		ret = maxim_reg16_write(client, regs[i].reg, regs[i].val);
-+#if 0 /* Do not stop on write fail .... */
-+		if (ret)
-+			return ret;
-+#endif
++		if (maxim_reg16_write(client, regs[i].reg, regs[i].val)) {
++			usleep_range(100, 150); /* wait 100ns */
++			maxim_reg16_write(client, regs[i].reg, regs[i].val);
++		}
 +	}
 +
 +	return 0;
@@ -1986,10 +1985,10 @@ index 0000000..157646f
 +MODULE_LICENSE("GPL");
 diff --git a/drivers/media/i2c/soc_camera/max9271_ov490_ov10640.c b/drivers/media/i2c/soc_camera/max9271_ov490_ov10640.c
 new file mode 100644
-index 0000000..1285280
+index 0000000..4fe5a88
 --- /dev/null
 +++ b/drivers/media/i2c/soc_camera/max9271_ov490_ov10640.c
-@@ -0,0 +1,891 @@
+@@ -0,0 +1,890 @@
 +/*
 + * MAXIM max9271 with OmniVision ov490-ov10640 sensor camera driver
 + *
@@ -2052,14 +2051,13 @@ index 0000000..1285280
 +static int ov490_set_regs(struct i2c_client *client,
 +			  const struct ov490_reg *regs, int nr_regs)
 +{
-+	int i, ret;
++	int i;
 +
 +	for (i = 0; i < nr_regs; i++) {
-+		ret = maxim_reg16_write(client, regs[i].reg, regs[i].val);
-+#if 0 /* Do not stop on write fail .... */
-+		if (ret)
-+			return ret;
-+#endif
++		if (maxim_reg16_write(client, regs[i].reg, regs[i].val)) {
++			usleep_range(100, 150); /* wait 100 us */
++			maxim_reg16_write(client, regs[i].reg, regs[i].val);
++		}
 +	}
 +
 +	return 0;
@@ -2883,10 +2881,10 @@ index 0000000..1285280
 +#endif
 diff --git a/drivers/media/i2c/soc_camera/max9271_ov490_ov10640.h b/drivers/media/i2c/soc_camera/max9271_ov490_ov10640.h
 new file mode 100644
-index 0000000..000407f
+index 0000000..1274165
 --- /dev/null
 +++ b/drivers/media/i2c/soc_camera/max9271_ov490_ov10640.h
-@@ -0,0 +1,35 @@
+@@ -0,0 +1,32 @@
 +/*
 + * OmniVision ov490-ov10640 sensor camera wizard 1280x1080@30/UYVY/BT601/8bit
 + *
@@ -2908,26 +2906,23 @@ index 0000000..000407f
 +{0xfffe, 0x82},
 +{0x0071, 0x11},
 +{0x0075, 0x11},
-+{0xfffd, 0x80},
 +{0xfffe, 0x29},
 +{0x6010, 0x01},
 +{0x4017, 0x00},
-+{0xfffd, 0x80},
 +{0xfffe, 0x28},
 +{0x6000, 0x04},
 +{0x6004, 0x00},
 +{0x6008, 0x01},
-+{0xfffd, 0x80},
 +{0xfffe, 0x80},
 +{0x0091, 0x00},
 +{0x00bb, 0x1d},
 +};
 diff --git a/drivers/media/i2c/soc_camera/max9286_max9271.c b/drivers/media/i2c/soc_camera/max9286_max9271.c
 new file mode 100644
-index 0000000..513c440
+index 0000000..d734203
 --- /dev/null
 +++ b/drivers/media/i2c/soc_camera/max9286_max9271.c
-@@ -0,0 +1,476 @@
+@@ -0,0 +1,478 @@
 +/*
 + * MAXIM max9286-max9271 GMSL driver
 + *
@@ -3001,6 +2996,7 @@ index 0000000..513c440
 +	u8 val = 0;
 +	int timeout = priv->timeout;
 +	int mask = (2 << idx) - 1;
++	int ret = 0;
 +
 +	/* Reverse channel enable */
 +	client->addr = priv->des_addr;				/* MAX9286-CAMx I2C */
@@ -3042,19 +3038,20 @@ index 0000000..513c440
 +		/* Check if already initialized (after reboot/reset ?) */
 +		client->addr = priv->max9271_addr_map[idx];		/* MAX9271-CAMx I2C */
 +		maxim_reg8_read(client, 0x1e, &val);			/* read max9271 ID */
-+		if (val == MAX9271_ID)
++		if (val == MAX9271_ID) {
++			ret = -EADDRINUSE;
 +			break;
++		}
 +	}
 +
-+	if (!timeout) {
-+		dev_info(&client->dev, "link%d max9271 at 0x%x not found: timeout GMSL link establish\n",
-+				       idx, priv->max9271_addr_map[idx]);
-+		return -ENODEV;
-+	}
++	if (!timeout)
++		ret = -ETIMEDOUT;
 +
-+	dev_info(&client->dev, "link%d MAX9271 at 0x%x\n", idx, priv->max9271_addr_map[idx]);
++	dev_info(&client->dev, "link%d MAX9271 %sat 0x%x %s\n", idx,
++			       ret == -EADDRINUSE ? "already " : "", priv->max9271_addr_map[idx],
++			       ret == -ETIMEDOUT ? "not found: timeout GMSL link establish" : "");
 +
-+	return 0;
++	return ret;
 +}
 +
 +static void max9286_max9271_initial_setup(struct i2c_client *client)
@@ -3406,7 +3403,7 @@ index 0000000..513c440
 +MODULE_LICENSE("GPL");
 diff --git a/drivers/media/i2c/soc_camera/max9286_max9271.h b/drivers/media/i2c/soc_camera/max9286_max9271.h
 new file mode 100644
-index 0000000..4916e421
+index 0000000..7aafba7
 --- /dev/null
 +++ b/drivers/media/i2c/soc_camera/max9286_max9271.h
 @@ -0,0 +1,210 @@
@@ -3620,9 +3617,8 @@ index 0000000..4916e421
 +#endif /* MAXIM_DUMP */
 +
 +#endif /* _MAX9286_MAX9271_H */
-\ No newline at end of file
 diff --git a/drivers/media/i2c/soc_camera/max9286_max9271_ov10635_debug.h b/drivers/media/i2c/soc_camera/max9286_max9271_ov10635_debug.h
-new file mode 100755
+new file mode 100644
 index 0000000..4c3515a
 --- /dev/null
 +++ b/drivers/media/i2c/soc_camera/max9286_max9271_ov10635_debug.h
