@@ -1,6 +1,6 @@
-From fbba07398b595aab94ee0a4280cbd0fbef101978 Mon Sep 17 00:00:00 2001
+From 03f10701ca7bc9774032ff05f09ac1c10bdb744f Mon Sep 17 00:00:00 2001
 From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Date: Thu, 15 Sep 2016 16:30:54 +0300
+Date: Wed, 4 Jan 2017 10:28:48 +0300
 Subject: [PATCH] arm64: renesas: M3ULCB.View board support
 
 M3ULCB.View suport with 10635/10640 cameras
@@ -8,8 +8,8 @@ M3ULCB.View suport with 10635/10640 cameras
 Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 ---
  arch/arm64/boot/dts/renesas/Makefile               |   2 +-
- .../arm64/boot/dts/renesas/r8a7796-m3ulcb-view.dts | 859 +++++++++++++++++++++
- 2 files changed, 860 insertions(+), 1 deletion(-)
+ .../arm64/boot/dts/renesas/r8a7796-m3ulcb-view.dts | 892 +++++++++++++++++++++
+ 2 files changed, 893 insertions(+), 1 deletion(-)
  create mode 100644 arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-view.dts
 
 diff --git a/arch/arm64/boot/dts/renesas/Makefile b/arch/arm64/boot/dts/renesas/Makefile
@@ -27,15 +27,15 @@ index 377524f..7d445b9 100644
  clean-files	:= *.dtb
 diff --git a/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-view.dts b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-view.dts
 new file mode 100644
-index 0000000..4ece662
+index 0000000..978ef84
 --- /dev/null
 +++ b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-view.dts
-@@ -0,0 +1,859 @@
+@@ -0,0 +1,892 @@
 +/*
 + * Device Tree Source for the M3ULCB board
 + *
-+ * Copyright (C) 2016 Renesas Electronics Corp.
-+ * Copyright (C) 2016 Cogent Embedded, Inc.
++ * Copyright (C) 2016-2017 Renesas Electronics Corp.
++ * Copyright (C) 2016-2017 Cogent Embedded, Inc.
 + *
 + * This file is licensed under the terms of the GNU General Public License
 + * version 2.  This program is licensed "as is" without any warranty of any
@@ -412,66 +412,91 @@ index 0000000..4ece662
 +	clock-frequency = <400000>;
 +
 +	ov106xx@0 {
-+		compatible = "maxim,max9286-max9271-ov106xx";
++		compatible = "maxim,max9271-ov106xx";
 +		reg = <0x60>;
 +
-+		port {
++		port@0 {
 +			ov106xx_in0: endpoint {
 +				clock-lanes = <0>;
 +				data-lanes = <1 2 3 4>;
 +				remote-endpoint = <&vin0ep0>;
 +			};
 +		};
++		port@1 {
++			ov106xx_des0ep0: endpoint {
++				remote-endpoint = <&max9286_des0ep0>;
++			};
++		};
 +	};
 +
 +	ov106xx@1 {
-+		compatible = "maxim,max9286-max9271-ov106xx";
++		compatible = "maxim,max9271-ov106xx";
 +		reg = <0x61>;
 +
-+		port {
++		port@0 {
 +			ov106xx_in1: endpoint {
 +				clock-lanes = <0>;
 +				data-lanes = <1 2 3 4>;
 +				remote-endpoint = <&vin1ep0>;
 +			};
 +		};
++		port@1 {
++			ov106xx_des0ep1: endpoint {
++				remote-endpoint = <&max9286_des0ep1>;
++			};
++		};
 +	};
 +
 +	ov106xx@2 {
-+		compatible = "maxim,max9286-max9271-ov106xx";
++		compatible = "maxim,max9271-ov106xx";
 +		reg = <0x62>;
 +
-+		port {
++		port@0 {
 +			ov106xx_in2: endpoint {
 +				clock-lanes = <0>;
 +				data-lanes = <1 2 3 4>;
 +				remote-endpoint = <&vin2ep0>;
 +			};
 +		};
++		port@1 {
++			ov106xx_des0ep2: endpoint {
++				remote-endpoint = <&max9286_des0ep2>;
++			};
++		};
 +	};
 +
 +	ov106xx@3 {
-+		compatible = "maxim,max9286-max9271-ov106xx";
++		compatible = "maxim,max9271-ov106xx";
 +		reg = <0x63>;
 +
-+		port {
++		port@0 {
 +			ov106xx_in3: endpoint {
 +				clock-lanes = <0>;
 +				data-lanes = <1 2 3 4>;
 +				remote-endpoint = <&vin3ep0>;
 +			};
 +		};
++		port@1 {
++			ov106xx_des0ep3: endpoint {
++				remote-endpoint = <&max9286_des0ep3>;
++			};
++		};
 +	};
 +
 +	ov106xx@4 {
-+		compatible = "maxim,max9286-max9271-ov106xx";
++		compatible = "maxim,max9271-ov106xx";
 +		reg = <0x64>;
 +
-+		port {
++		port@0 {
 +			ov106xx_in4: endpoint {
 +				clock-lanes = <0>;
 +				data-lanes = <1>;
 +				remote-endpoint = <&vin4ep0>;
++			};
++		};
++		port@1 {
++			ov106xx_des1ep0: endpoint {
++				remote-endpoint = <&max9286_des1ep0>;
 +			};
 +		};
 +	};
@@ -485,12 +510,21 @@ index 0000000..4ece662
 +		maxim,resetb-gpio = <1>;
 +		maxim,resetb-active-low;
 +		maxim,fsync-mode = "automatic";
-+		maxim,timeout = <10>;
++		maxim,timeout = <100>;
++		maxim,i2c-quirk = <0x6c>;
 +
 +		port {
-+			max9286_ep0: endpoint {
-+				clock-lanes = <0>;
-+				data-lanes = <1 2 3 4>;
++			max9286_des0ep0: endpoint@0 {
++				max9271-addr = <0x50>;
++			};
++			max9286_des0ep1: endpoint@1 {
++				max9271-addr = <0x51>;
++			};
++			max9286_des0ep2: endpoint@2 {
++				max9271-addr = <0x52>;
++			};
++			max9286_des0ep3: endpoint@3 {
++				max9271-addr = <0x53>;
 +			};
 +		};
 +	};
@@ -504,12 +538,11 @@ index 0000000..4ece662
 +		maxim,resetb-gpio = <1>;
 +		maxim,resetb-active-low;
 +		maxim,fsync-mode = "automatic";
-+		maxim,timeout = <10>;
++		maxim,timeout = <100>;
 +
 +		port {
-+			max9286_ep1: endpoint {
-+				clock-lanes = <0>;
-+				data-lanes = <1>;
++			max9286_des1ep0: endpoint@0 {
++				max9271-addr = <0x54>;
 +			};
 +		};
 +	};
@@ -587,7 +620,7 @@ index 0000000..4ece662
 +		};
 +		port@2 {
 +			des0ep0: endpoint {
-+				remote-endpoint = <&max9286_ep0>;
++				remote-endpoint = <&max9286_des0ep0>;
 +			};
 +		};
 +	};
@@ -615,7 +648,7 @@ index 0000000..4ece662
 +		};
 +		port@2 {
 +			des0ep1: endpoint {
-+				remote-endpoint = <&max9286_ep0>;
++				remote-endpoint = <&max9286_des0ep1>;
 +			};
 +		};
 +	};
@@ -643,7 +676,7 @@ index 0000000..4ece662
 +		};
 +		port@2 {
 +			des0ep2: endpoint {
-+				remote-endpoint = <&max9286_ep0>;
++				remote-endpoint = <&max9286_des0ep2>;
 +			};
 +		};
 +	};
@@ -671,7 +704,7 @@ index 0000000..4ece662
 +		};
 +		port@2 {
 +			des0ep3: endpoint {
-+				remote-endpoint = <&max9286_ep0>;
++				remote-endpoint = <&max9286_des0ep3>;
 +			};
 +		};
 +	};
@@ -688,8 +721,8 @@ index 0000000..4ece662
 +			vin4ep0: endpoint {
 +				csi,select = "csi20";
 +				virtual,channel = <0>;
-+				remote-endpoint = <&ov106xx_in4>;
 +				data-lanes = <1>;
++				remote-endpoint = <&ov106xx_in4>;
 +			};
 +		};
 +		port@1 {
@@ -699,7 +732,7 @@ index 0000000..4ece662
 +		};
 +		port@2 {
 +			des1ep0: endpoint {
-+				remote-endpoint = <&max9286_ep1>;
++				remote-endpoint = <&max9286_des1ep0>;
 +			};
 +		};
 +	};

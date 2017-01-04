@@ -585,7 +585,7 @@ index 0000000..4c3f5b3
 +	spidev@0 {
 +		compatible = "renesas,sh-msiof";
 +		reg = <0>;
-+		spi-max-frequency = <66666666>;
++		spi-max-frequency = <33333333>;
 +		spi-cpha;
 +		spi-cpol;
 +	};

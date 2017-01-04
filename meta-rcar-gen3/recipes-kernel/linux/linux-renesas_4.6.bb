@@ -47,11 +47,13 @@ SRC_URI_append = " \
     file://0054-arm64-renesas-M3ULCB-View-board-support.patch \
     file://0055-arm64-dts-r8a7795-h3ulcb-had-set-console-from-rdrive.patch \
     file://0056-arm64-dts-r8a7795-h3ulcb-had-route-RAVB-to-rdrive.patch \
-    ${@base_conditional("LVDSCAMERA_ONE", "1", " file://0057-arm64-dts-Gen3-view-boards-stream-from-1-cam.patch", "", d)} \
-    ${@base_conditional("LVDSCAMERA_FIVE", "1", " file://0058-arm64-dts-Gen3-view-boards-stream-from-5-cam.patch", "", d)} \
-    ${@base_conditional("RAVB_DEBUG", "1", " file://0059-net-ethernet-renesas-ravb-packets-dump.patch", "", d)} \
-    ${@base_conditional("LVDSCAMERA_SIX", "1", " file://0060-arm64-dts-Gen3-view-boards-stream-from-6-cam.patch", "", d)} \
-    ${@base_conditional("LVDSCAMERA_SEVEN", "1", " file://0061-arm64-dts-Gen3-view-boards-stream-from-7-cam.patch", "", d)} \
+    file://0057-arm64-renesas-H3ULCB-Kingfisher-board-support.patch \
+    file://0058-arm64-renesas-M3ULCB-Kingfisher-board-support.patch \
+    ${@base_conditional("LVDSCAMERA_ONE", "1", " file://0070-arm64-dts-Gen3-view-boards-stream-from-1-cam.patch", "", d)} \
+    ${@base_conditional("LVDSCAMERA_FIVE", "1", " file://0071-arm64-dts-Gen3-view-boards-stream-from-5-cam.patch", "", d)} \
+    ${@base_conditional("LVDSCAMERA_SIX", "1", " file://0072-arm64-dts-Gen3-view-boards-stream-from-6-cam.patch", "", d)} \
+    ${@base_conditional("LVDSCAMERA_SEVEN", "1", " file://0073-arm64-dts-Gen3-view-boards-stream-from-7-cam.patch", "", d)} \
+    ${@base_conditional("RAVB_DEBUG", "1", " file://0080-net-ethernet-renesas-ravb-packets-dump.patch", "", d)} \
 "
 
 SRC_URI_append_h3ulcb = " \
@@ -69,6 +71,7 @@ SRC_URI_append_m3ulcb = " \
 KERNEL_DEVICETREE_append_h3ulcb = '${@ \
     " renesas/r8a7795-h3ulcb-had.dtb " if 'h3ulcb-had' in '${MACHINE_FEATURES}' else \
     " renesas/r8a7795-h3ulcb-view.dtb " if 'h3ulcb-view' in '${MACHINE_FEATURES}' else \
+    " renesas/r8a7795-h3ulcb-kf.dtb " if 'h3ulcb-kf' in '${MACHINE_FEATURES}' else \
     ""}'
 
 KERNEL_DEVICETREE_append_salvator-x = '${@ \
@@ -78,4 +81,5 @@ KERNEL_DEVICETREE_append_salvator-x = '${@ \
 
 KERNEL_DEVICETREE_append_m3ulcb = '${@ \
     " renesas/r8a7796-m3ulcb-view.dtb " if 'm3ulcb-view' in '${MACHINE_FEATURES}' else \
+    " renesas/r8a7796-m3ulcb-kf.dtb " if 'm3ulcb-kf' in '${MACHINE_FEATURES}' else \
     ""}'

@@ -1,6 +1,6 @@
-From cb44ea5eeadb1a95de4b81e93788b75ecb239b29 Mon Sep 17 00:00:00 2001
+From 9af32392e5192ae8a46c7ac0df627deba59677e4 Mon Sep 17 00:00:00 2001
 From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-Date: Fri, 22 Apr 2016 23:27:23 +0300
+Date: Wed, 4 Jan 2017 12:43:15 +0300
 Subject: [PATCH] arm64: dts: Gen3 view boards: stream from 1 cam
 
 csi2 stream from 1 camera on Gen3 view boards:
@@ -9,17 +9,19 @@ VIN0 or VIN4
 Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
 ---
  arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-had.dts      | 8 ++++----
+ arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dts       | 8 ++++----
  arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-view.dts     | 8 ++++----
  arch/arm64/boot/dts/renesas/r8a7795-salvator-x-view.dts | 8 ++++----
+ arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-kf.dts       | 4 ++--
  arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-view.dts     | 4 ++--
  arch/arm64/boot/dts/renesas/r8a7796-salvator-x-view.dts | 4 ++--
- 5 files changed, 16 insertions(+), 16 deletions(-)
+ 7 files changed, 22 insertions(+), 22 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-had.dts b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-had.dts
-index c797574..f4274fb 100644
+index c88edc6..2c8526a 100644
 --- a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-had.dts
 +++ b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-had.dts
-@@ -621,7 +621,7 @@
+@@ -661,7 +661,7 @@
  		reg = <0x4c>;
  		gpios = <&gpio2 6 GPIO_ACTIVE_HIGH>; /* shared with CAN0 transceiver */
  		maxim,sensor_delay = <0>;
@@ -28,7 +30,7 @@ index c797574..f4274fb 100644
  		maxim,resetb-gpio = <1>;
  		maxim,resetb-active-low;
  		maxim,fsync-mode = "automatic";
-@@ -640,7 +640,7 @@
+@@ -689,7 +689,7 @@
  		reg = <0x6c>;
  		gpios = <&gpio5 25 GPIO_ACTIVE_HIGH>;
  		maxim,sensor_delay = <0>;
@@ -37,7 +39,7 @@ index c797574..f4274fb 100644
  		maxim,resetb-gpio = <1>;
  		maxim,resetb-active-low;
  		maxim,fsync-mode = "automatic";
-@@ -1042,7 +1042,7 @@
+@@ -1099,7 +1099,7 @@
  	status = "okay";
  
  	adi,input-interface = "ycbcr422";
@@ -46,7 +48,47 @@ index c797574..f4274fb 100644
  
  	virtual,channel {
  		csi2_vc0 {
-@@ -1078,7 +1078,7 @@
+@@ -1135,7 +1135,7 @@
+ 	status = "okay";
+ 
+ 	adi,input-interface = "ycbcr422";
+-	csi2,csi_rate = <700>;
++	csi2,csi_rate = <175>;
+ 
+ 	virtual,channel {
+ 		csi2_vc0 {
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dts b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dts
+index 0914af9..3047218 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dts
++++ b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dts
+@@ -1028,7 +1028,7 @@
+ 				compatible = "maxim,max9286-max9271";
+ 				reg = <0x2a>;
+ 				maxim,sensor_delay = <250>;
+-				maxim,links = <4>;
++				maxim,links = <1>;
+ 				maxim,resetb-gpio = <1>;
+ 				maxim,resetb-active-low;
+ 				maxim,fsync-mode = "automatic";
+@@ -1136,7 +1136,7 @@
+ 				compatible = "maxim,max9286-max9271";
+ 				reg = <0x2a>;
+ 				maxim,sensor_delay = <250>;
+-				maxim,links = <4>;
++				maxim,links = <1>;
+ 				maxim,resetb-gpio = <1>;
+ 				maxim,resetb-active-low;
+ 				maxim,fsync-mode = "automatic";
+@@ -1764,7 +1764,7 @@
+ 	status = "okay";
+ 
+ 	adi,input-interface = "ycbcr422";
+-	csi2,csi_rate = <700>;
++	csi2,csi_rate = <175>;
+ 
+ 	virtual,channel {
+ 		csi2_vc0 {
+@@ -1800,7 +1800,7 @@
  	status = "okay";
  
  	adi,input-interface = "ycbcr422";
@@ -56,10 +98,10 @@ index c797574..f4274fb 100644
  	virtual,channel {
  		csi2_vc0 {
 diff --git a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-view.dts b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-view.dts
-index f2ebe8e..b5a1752 100644
+index 8265b56..8643aa9 100644
 --- a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-view.dts
 +++ b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-view.dts
-@@ -506,7 +506,7 @@
+@@ -546,7 +546,7 @@
  		reg = <0x4c>;
  		gpios = <&gpio2 6 GPIO_ACTIVE_LOW>;
  		maxim,sensor_delay = <0>;
@@ -68,7 +110,7 @@ index f2ebe8e..b5a1752 100644
  		maxim,resetb-gpio = <1>;
  		maxim,resetb-active-low;
  		maxim,fsync-mode = "automatic";
-@@ -525,7 +525,7 @@
+@@ -574,7 +574,7 @@
  		reg = <0x6c>;
  		gpios = <&gpio5 25 GPIO_ACTIVE_LOW>;
  		maxim,sensor_delay = <0>;
@@ -77,7 +119,7 @@ index f2ebe8e..b5a1752 100644
  		maxim,resetb-gpio = <1>;
  		maxim,resetb-active-low;
  		maxim,fsync-mode = "automatic";
-@@ -924,7 +924,7 @@
+@@ -981,7 +981,7 @@
  	status = "okay";
  
  	adi,input-interface = "ycbcr422";
@@ -86,7 +128,7 @@ index f2ebe8e..b5a1752 100644
  
  	virtual,channel {
  		csi2_vc0 {
-@@ -960,7 +960,7 @@
+@@ -1017,7 +1017,7 @@
  	status = "okay";
  
  	adi,input-interface = "ycbcr422";
@@ -96,10 +138,10 @@ index f2ebe8e..b5a1752 100644
  	virtual,channel {
  		csi2_vc0 {
 diff --git a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x-view.dts b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x-view.dts
-index fd6ec62..a8fc862 100644
+index fa52ba8..f6ed003 100644
 --- a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x-view.dts
 +++ b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x-view.dts
-@@ -799,7 +799,7 @@
+@@ -839,7 +839,7 @@
  		reg = <0x4c>;
  		gpios = <&gpio6 30 GPIO_ACTIVE_LOW>;
  		maxim,sensor_delay = <0>;
@@ -108,7 +150,7 @@ index fd6ec62..a8fc862 100644
  		maxim,resetb-gpio = <1>;
  		maxim,resetb-active-low;
  		maxim,fsync-mode = "automatic";
-@@ -817,7 +817,7 @@
+@@ -866,7 +866,7 @@
  		compatible = "maxim,max9286-max9271";
  		reg = <0x6c>;
  		maxim,sensor_delay = <0>;
@@ -117,7 +159,7 @@ index fd6ec62..a8fc862 100644
  		maxim,resetb-gpio = <1>;
  		maxim,resetb-active-low;
  		maxim,fsync-mode = "automatic";
-@@ -1337,7 +1337,7 @@
+@@ -1394,7 +1394,7 @@
  	status = "okay";
  
  	adi,input-interface = "ycbcr422";
@@ -126,7 +168,29 @@ index fd6ec62..a8fc862 100644
  
  	virtual,channel {
  		csi2_vc0 {
-@@ -1373,7 +1373,7 @@
+@@ -1430,7 +1430,7 @@
+ 	status = "okay";
+ 
+ 	adi,input-interface = "ycbcr422";
+-	csi2,csi_rate = <700>;
++	csi2,csi_rate = <175>;
+ 
+ 	virtual,channel {
+ 		csi2_vc0 {
+diff --git a/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-kf.dts b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-kf.dts
+index 54874dd..a940d64 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-kf.dts
++++ b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-kf.dts
+@@ -1008,7 +1008,7 @@
+ 				compatible = "maxim,max9286-max9271";
+ 				reg = <0x2a>;
+ 				maxim,sensor_delay = <250>;
+-				maxim,links = <4>;
++				maxim,links = <1>;
+ 				maxim,resetb-gpio = <1>;
+ 				maxim,resetb-active-low;
+ 				maxim,fsync-mode = "automatic";
+@@ -1597,7 +1597,7 @@
  	status = "okay";
  
  	adi,input-interface = "ycbcr422";
@@ -136,10 +200,10 @@ index fd6ec62..a8fc862 100644
  	virtual,channel {
  		csi2_vc0 {
 diff --git a/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-view.dts b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-view.dts
-index 66e8e58..30b946c 100644
+index 4f10bfc..f088ac3 100644
 --- a/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-view.dts
 +++ b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-view.dts
-@@ -448,7 +448,7 @@
+@@ -473,7 +473,7 @@
  		reg = <0x4c>;
  		gpios = <&gpio2 6 GPIO_ACTIVE_LOW>;
  		maxim,sensor_delay = <0>;
@@ -148,7 +212,7 @@ index 66e8e58..30b946c 100644
  		maxim,resetb-gpio = <1>;
  		maxim,resetb-active-low;
  		maxim,fsync-mode = "automatic";
-@@ -782,7 +782,7 @@
+@@ -815,7 +815,7 @@
  	status = "okay";
  
  	adi,input-interface = "ycbcr422";
@@ -158,10 +222,10 @@ index 66e8e58..30b946c 100644
  	virtual,channel {
  		csi2_vc0 {
 diff --git a/arch/arm64/boot/dts/renesas/r8a7796-salvator-x-view.dts b/arch/arm64/boot/dts/renesas/r8a7796-salvator-x-view.dts
-index 6dcdd49..1c89493 100644
+index 90eb70c..0d7fcaf 100644
 --- a/arch/arm64/boot/dts/renesas/r8a7796-salvator-x-view.dts
 +++ b/arch/arm64/boot/dts/renesas/r8a7796-salvator-x-view.dts
-@@ -652,7 +652,7 @@
+@@ -678,7 +678,7 @@
  		reg = <0x4c>;
  		gpios = <&gpio6 30 GPIO_ACTIVE_LOW>;
  		maxim,sensor_delay = <0>;
@@ -170,7 +234,7 @@ index 6dcdd49..1c89493 100644
  		maxim,resetb-gpio = <1>;
  		maxim,resetb-active-low;
  		maxim,fsync-mode = "automatic";
-@@ -1088,7 +1088,7 @@
+@@ -1122,7 +1122,7 @@
  	status = "okay";
  
  	adi,input-interface = "ycbcr422";
