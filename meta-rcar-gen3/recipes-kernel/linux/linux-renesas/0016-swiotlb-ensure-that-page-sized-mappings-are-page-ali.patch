@@ -1,0 +1,38 @@
+From c92eeec67eb96b79fe3d01b0045789de52fd5af3 Mon Sep 17 00:00:00 2001
+From: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Date: Tue, 3 Jan 2017 14:24:58 +0300
+Subject: [PATCH] swiotlb: ensure that page-sized mappings are page-aligned
+
+Some drivers (e.g. nvme) do depend on page mappings to be page
+aligned.
+
+Swiotlb already enforces such alignment for mappings greater than page,
+extend that to page-sized mappings as well.
+
+Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+---
+ lib/swiotlb.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/lib/swiotlb.c b/lib/swiotlb.c
+index 76f29ecba8f4..771234d050c7 100644
+--- a/lib/swiotlb.c
++++ b/lib/swiotlb.c
+@@ -452,11 +452,11 @@ phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
+ 		    : 1UL << (BITS_PER_LONG - IO_TLB_SHIFT);
+ 
+ 	/*
+-	 * For mappings greater than a page, we limit the stride (and
+-	 * hence alignment) to a page size.
++	 * For mappings greater than or equal to a page, we limit the stride
++	 * (and hence alignment) to a page size.
+ 	 */
+ 	nslots = ALIGN(size, 1 << IO_TLB_SHIFT) >> IO_TLB_SHIFT;
+-	if (size > PAGE_SIZE)
++	if (size >= PAGE_SIZE)
+ 		stride = (1 << (PAGE_SHIFT - IO_TLB_SHIFT));
+ 	else
+ 		stride = 1;
+-- 
+2.11.0
+

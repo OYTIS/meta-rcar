@@ -32,6 +32,10 @@ SRC_URI_append = " \
     file://0010-mmc-sh_mobile_sdhi-Add-R-CarGen3-SDHI-SEQUENCER-supp.patch \
     file://0011-arm64-renesas-Add-M3ULCB-board.patch \
     file://0012-staging-boards-Add-M3ULCB-staging.patch \
+    file://linux-renesas/0013-arm64-mm-only-initialize-swiotlb-when-necessary.patch \
+    file://linux-renesas/0014-Revert-PCI-rcar-pcie-Add-bus-notifier-so-we-can-limi.patch \
+    file://linux-renesas/0015-arm64-do-not-set-dma-masks-that-device-connection-ca.patch \
+    file://linux-renesas/0016-swiotlb-ensure-that-page-sized-mappings-are-page-ali.patch \
     file://0019-can-rcar_can-add-enable-and-standby-control-pins.patch \
     file://0020-can-rcar-canfd-Add-Renesas-R-Car-CAN-FD-driver.patch \
     file://0021-arm64-dts-r8a7795-Add-CAN-FD-support.patch \

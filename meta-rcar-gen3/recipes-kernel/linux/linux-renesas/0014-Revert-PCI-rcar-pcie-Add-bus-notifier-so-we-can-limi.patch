@@ -1,0 +1,60 @@
+From b541de29d20a0cdeb45509da3565f92e5c4f5dd9 Mon Sep 17 00:00:00 2001
+From: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+Date: Thu, 29 Dec 2016 13:23:30 +0300
+Subject: [PATCH] Revert "PCI: rcar-pcie: Add bus notifier so we can limit
+ the dma range"
+
+This reverts commit ac45f65d1195c39406b5282247bc1fbcf36a6831.
+
+Reseting DMA mask in bus notifier is racy: driver could already start
+DMA operations with unsupported mask in probe routine.
+
+Following commit provides alternative solution.
+
+Signed-off-by: Nikita Yushchenko <nikita.yoush@cogentembedded.com>
+---
+ drivers/pci/host/pcie-rcar.c | 28 ----------------------------
+ 1 file changed, 28 deletions(-)
+
+diff --git a/drivers/pci/host/pcie-rcar.c b/drivers/pci/host/pcie-rcar.c
+index 8c0f882da498..bf37c534dcfc 100644
+--- a/drivers/pci/host/pcie-rcar.c
++++ b/drivers/pci/host/pcie-rcar.c
+@@ -1282,34 +1282,6 @@ static struct platform_driver rcar_pcie_driver = {
+ };
+ module_platform_driver(rcar_pcie_driver);
+ 
+-static int rcar_pcie_pci_notifier(struct notifier_block *nb,
+-			    unsigned long action, void *data)
+-{
+-	struct device *dev = data;
+-
+-	switch (action) {
+-	case BUS_NOTIFY_BOUND_DRIVER:
+-		/* Force the DMA mask to lower 32-bits */
+-		dma_set_mask_and_coherent(dev, DMA_BIT_MASK(32));
+-		break;
+-	default:
+-		return NOTIFY_DONE;
+-	}
+-
+-	return NOTIFY_OK;
+-}
+-
+-static struct notifier_block device_nb = {
+-	.notifier_call = rcar_pcie_pci_notifier,
+-};
+-
+-static int __init register_rcar_pcie_pci_notifier(void)
+-{
+-	return bus_register_notifier(&pci_bus_type, &device_nb);
+-}
+-
+-arch_initcall(register_rcar_pcie_pci_notifier);
+-
+ MODULE_AUTHOR("Phil Edworthy <phil.edworthy@renesas.com>");
+ MODULE_DESCRIPTION("Renesas R-Car PCIe driver");
+ MODULE_LICENSE("GPL v2");
+-- 
+2.11.0
+
