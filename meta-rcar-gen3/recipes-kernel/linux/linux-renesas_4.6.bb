@@ -36,6 +36,8 @@ SRC_URI_append = " \
     file://0014-Revert-PCI-rcar-pcie-Add-bus-notifier-so-we-can-limi.patch \
     file://0015-arm64-do-not-set-dma-masks-that-device-connection-ca.patch \
     file://0016-swiotlb-ensure-that-page-sized-mappings-are-page-ali.patch \
+    file://0017-PCI-rcar-Add-multi-MSI-support.patch \
+    file://0018-PCI-rcar-Try-increasing-PCIe-link-speed-to-5-GT-s-at.patch \
     file://0019-can-rcar_can-add-enable-and-standby-control-pins.patch \
     file://0020-can-rcar-canfd-Add-Renesas-R-Car-CAN-FD-driver.patch \
     file://0021-arm64-dts-r8a7795-Add-CAN-FD-support.patch \
