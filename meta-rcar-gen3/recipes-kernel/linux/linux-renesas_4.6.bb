@@ -45,6 +45,7 @@ SRC_URI_append = " \
     file://0023-can-rcar_canfd-add-enable-and-standby-control-pins.patch \
     file://0024-mtd-Add-RPC-HyperFlash-driver.patch \
     file://0025-IMR-driver-interim-patch.patch \
+    file://0026-lib-swiotlb-reduce-verbosity.patch \
     file://0040-H3-MAX9286-TI964-support-add-10635-10640-cameras.patch \
     file://0050-arm64-renesas-Salvator-X-View-H3-board-support.patch \
     file://0051-arm64-renesas-H3ULCB-HAD-support.patch \
