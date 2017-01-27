@@ -13,24 +13,28 @@ diff --git a/lib/swiotlb.c b/lib/swiotlb.c
 index 771234d..b395abc 100644
 --- a/lib/swiotlb.c
 +++ b/lib/swiotlb.c
-@@ -514,7 +514,7 @@ phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
+@@ -513,8 +513,10 @@ phys_addr_t swiotlb_tbl_map_single(struct device *hwdev,
+ 
  not_found:
  	spin_unlock_irqrestore(&io_tlb_lock, flags);
++#if 0
  	if (printk_ratelimit())
--		dev_warn(hwdev, "swiotlb buffer is full (sz: %zd bytes)\n", size);
-+		dev_dbg(hwdev, "swiotlb buffer is full (sz: %zd bytes)\n", size);
+ 		dev_warn(hwdev, "swiotlb buffer is full (sz: %zd bytes)\n", size);
++#endif
  	return SWIOTLB_MAP_ERROR;
  found:
  	spin_unlock_irqrestore(&io_tlb_lock, flags);
-@@ -714,7 +714,7 @@ swiotlb_full(struct device *dev, size_t size, enum dma_data_direction dir,
+@@ -714,8 +714,10 @@ swiotlb_full(struct device *dev, size_t size, enum dma_data_direction dir,
  	 * When the mapping is small enough return a static buffer to limit
  	 * the damage, or panic when the transfer is too big.
  	 */
--	printk(KERN_ERR "DMA: Out of SW-IOMMU space for %zu bytes at "
-+	printk(KERN_DEBUG "DMA: Out of SW-IOMMU space for %zu bytes at "
++#if 0
+ 	printk(KERN_ERR "DMA: Out of SW-IOMMU space for %zu bytes at "
  	       "device %s\n", size, dev ? dev_name(dev) : "?");
++#endif
  
  	if (size <= io_tlb_overflow || !do_panic)
+ 		return;
 -- 
 1.9.1
 
