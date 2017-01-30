@@ -1,0 +1,413 @@
+From d2b8bc243b1fdfe70a3da026daa1b1067729d520 Mon Sep 17 00:00:00 2001
+From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+Date: Sun, 29 Jan 2017 07:46:02 +0300
+Subject: [PATCH] arm64: dts: Gen3 view boards: TYPE2 first 4 cameras
+
+This set 4 cameras to TYPE2 in DT
+
+Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+---
+ arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-had.dts      | 17 +++++++++++++++--
+ arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dts       | 17 +++++++++++++++--
+ arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-view.dts     | 17 +++++++++++++++--
+ arch/arm64/boot/dts/renesas/r8a7795-salvator-x-view.dts | 17 +++++++++++++++--
+ arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-kf.dts       | 17 +++++++++++++++--
+ arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-view.dts     | 17 +++++++++++++++--
+ arch/arm64/boot/dts/renesas/r8a7796-salvator-x-view.dts | 17 +++++++++++++++--
+ 7 files changed, 105 insertions(+), 14 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-had.dts b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-had.dts
+index 2054f59..b44da54 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-had.dts
++++ b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-had.dts
+@@ -516,6 +516,9 @@
+ 		compatible = "ovti,ov106xx";
+ 		reg = <0x60>;
+ 
++		maxim,fixed-sensor = "ov490";
++		maxim,width = <1280>;
++		maxim,height = <966>;
+ 		port@0 {
+ 			ov106xx_in0: endpoint {
+ 				clock-lanes = <0>;
+@@ -534,6 +537,9 @@
+ 		compatible = "ovti,ov106xx";
+ 		reg = <0x61>;
+ 
++		maxim,fixed-sensor = "ov490";
++		maxim,width = <1280>;
++		maxim,height = <966>;
+ 		port@0 {
+ 			ov106xx_in1: endpoint {
+ 				clock-lanes = <0>;
+@@ -552,6 +558,9 @@
+ 		compatible = "ovti,ov106xx";
+ 		reg = <0x62>;
+ 
++		maxim,fixed-sensor = "ov490";
++		maxim,width = <1280>;
++		maxim,height = <966>;
+ 		port@0 {
+ 			ov106xx_in2: endpoint {
+ 				clock-lanes = <0>;
+@@ -570,6 +579,9 @@
+ 		compatible = "ovti,ov106xx";
+ 		reg = <0x63>;
+ 
++		maxim,fixed-sensor = "ov490";
++		maxim,width = <1280>;
++		maxim,height = <966>;
+ 		port@0 {
+ 			ov106xx_in3: endpoint {
+ 				clock-lanes = <0>;
+@@ -663,8 +675,9 @@
+ 		maxim,sensor_delay = <0>;
+ 		maxim,links = <4>;
+ 		maxim,lanes = <4>;
+-		maxim,resetb-gpio = <1>;
+-		maxim,fsync-mode = "automatic";
++		maxim,resetb-gpio = <4>;
++		maxim,resetb-active-high;
++		maxim,fsync-mode = "manual";
+ 		maxim,timeout = <100>;
+ 		maxim,i2c-quirk = <0x6c>;
+ 
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dts b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dts
+index d045448..52a1a4e 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dts
++++ b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-kf.dts
+@@ -953,6 +953,9 @@
+ 				compatible = "ovti,ov106xx";
+ 				reg = <0x60>;
+ 
++				maxim,fixed-sensor = "ov490";
++				maxim,width = <1280>;
++				maxim,height = <966>;
+ 				port@0 {
+ 					ov106xx_in0: endpoint {
+ 						clock-lanes = <0>;
+@@ -974,6 +977,9 @@
+ 				compatible = "ovti,ov106xx";
+ 				reg = <0x61>;
+ 
++				maxim,fixed-sensor = "ov490";
++				maxim,width = <1280>;
++				maxim,height = <966>;
+ 				port@0 {
+ 					ov106xx_in1: endpoint {
+ 						clock-lanes = <0>;
+@@ -995,6 +1001,9 @@
+ 				compatible = "ovti,ov106xx";
+ 				reg = <0x62>;
+ 
++				maxim,fixed-sensor = "ov490";
++				maxim,width = <1280>;
++				maxim,height = <966>;
+ 				port@0 {
+ 					ov106xx_in2: endpoint {
+ 						clock-lanes = <0>;
+@@ -1016,6 +1025,9 @@
+ 				compatible = "ovti,ov106xx";
+ 				reg = <0x63>;
+ 
++				maxim,fixed-sensor = "ov490";
++				maxim,width = <1280>;
++				maxim,height = <966>;
+ 				port@0 {
+ 					ov106xx_in3: endpoint {
+ 						clock-lanes = <0>;
+@@ -1087,8 +1099,9 @@
+ 				maxim,sensor_delay = <350>;
+ 				maxim,links = <4>;
+ 				maxim,lanes = <4>;
+-				maxim,resetb-gpio = <1>;
+-				maxim,fsync-mode = "automatic";
++				maxim,resetb-gpio = <4>;
++				maxim,resetb-active-high;
++				maxim,fsync-mode = "manual";
+ 				maxim,timeout = <100>;
+ 
+ 				port@0 {
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-view.dts b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-view.dts
+index 071fa27..bc0c760 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-view.dts
++++ b/arch/arm64/boot/dts/renesas/r8a7795-h3ulcb-view.dts
+@@ -401,6 +401,9 @@
+ 		compatible = "ovti,ov106xx";
+ 		reg = <0x60>;
+ 
++		maxim,fixed-sensor = "ov490";
++		maxim,width = <1280>;
++		maxim,height = <966>;
+ 		port@0 {
+ 			ov106xx_in0: endpoint {
+ 				clock-lanes = <0>;
+@@ -419,6 +422,9 @@
+ 		compatible = "ovti,ov106xx";
+ 		reg = <0x61>;
+ 
++		maxim,fixed-sensor = "ov490";
++		maxim,width = <1280>;
++		maxim,height = <966>;
+ 		port@0 {
+ 			ov106xx_in1: endpoint {
+ 				clock-lanes = <0>;
+@@ -437,6 +443,9 @@
+ 		compatible = "ovti,ov106xx";
+ 		reg = <0x62>;
+ 
++		maxim,fixed-sensor = "ov490";
++		maxim,width = <1280>;
++		maxim,height = <966>;
+ 		port@0 {
+ 			ov106xx_in2: endpoint {
+ 				clock-lanes = <0>;
+@@ -455,6 +464,9 @@
+ 		compatible = "ovti,ov106xx";
+ 		reg = <0x63>;
+ 
++		maxim,fixed-sensor = "ov490";
++		maxim,width = <1280>;
++		maxim,height = <966>;
+ 		port@0 {
+ 			ov106xx_in3: endpoint {
+ 				clock-lanes = <0>;
+@@ -548,8 +560,9 @@
+ 		maxim,sensor_delay = <0>;
+ 		maxim,links = <4>;
+ 		maxim,lanes = <4>;
+-		maxim,resetb-gpio = <1>;
+-		maxim,fsync-mode = "automatic";
++		maxim,resetb-gpio = <4>;
++		maxim,resetb-active-high;
++		maxim,fsync-mode = "manual";
+ 		maxim,timeout = <100>;
+ 		maxim,i2c-quirk = <0x6c>;
+ 
+diff --git a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x-view.dts b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x-view.dts
+index b271f0d..d372ff6 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7795-salvator-x-view.dts
++++ b/arch/arm64/boot/dts/renesas/r8a7795-salvator-x-view.dts
+@@ -694,6 +694,9 @@
+ 		compatible = "ovti,ov106xx";
+ 		reg = <0x60>;
+ 
++		maxim,fixed-sensor = "ov490";
++		maxim,width = <1280>;
++		maxim,height = <966>;
+ 		port@0 {
+ 			ov106xx_in0: endpoint {
+ 				clock-lanes = <0>;
+@@ -712,6 +715,9 @@
+ 		compatible = "ovti,ov106xx";
+ 		reg = <0x61>;
+ 
++		maxim,fixed-sensor = "ov490";
++		maxim,width = <1280>;
++		maxim,height = <966>;
+ 		port@0 {
+ 			ov106xx_in1: endpoint {
+ 				clock-lanes = <0>;
+@@ -730,6 +736,9 @@
+ 		compatible = "ovti,ov106xx";
+ 		reg = <0x62>;
+ 
++		maxim,fixed-sensor = "ov490";
++		maxim,width = <1280>;
++		maxim,height = <966>;
+ 		port@0 {
+ 			ov106xx_in2: endpoint {
+ 				clock-lanes = <0>;
+@@ -748,6 +757,9 @@
+ 		compatible = "ovti,ov106xx";
+ 		reg = <0x63>;
+ 
++		maxim,fixed-sensor = "ov490";
++		maxim,width = <1280>;
++		maxim,height = <966>;
+ 		port@0 {
+ 			ov106xx_in3: endpoint {
+ 				clock-lanes = <0>;
+@@ -841,8 +853,9 @@
+ 		maxim,sensor_delay = <0>;
+ 		maxim,links = <4>;
+ 		maxim,lanes = <4>;
+-		maxim,resetb-gpio = <1>;
+-		maxim,fsync-mode = "automatic";
++		maxim,resetb-gpio = <4>;
++		maxim,resetb-active-high;
++		maxim,fsync-mode = "manual";
+ 		maxim,timeout = <100>;
+ 		maxim,i2c-quirk = <0x6c>;
+ 
+diff --git a/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-kf.dts b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-kf.dts
+index 1461bab..0085fc5 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-kf.dts
++++ b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-kf.dts
+@@ -933,6 +933,9 @@
+ 				compatible = "ovti,ov106xx";
+ 				reg = <0x60>;
+ 
++				maxim,fixed-sensor = "ov490";
++				maxim,width = <1280>;
++				maxim,height = <966>;
+ 				port@0 {
+ 					ov106xx_in0: endpoint {
+ 						clock-lanes = <0>;
+@@ -954,6 +957,9 @@
+ 				compatible = "ovti,ov106xx";
+ 				reg = <0x61>;
+ 
++				maxim,fixed-sensor = "ov490";
++				maxim,width = <1280>;
++				maxim,height = <966>;
+ 				port@0 {
+ 					ov106xx_in1: endpoint {
+ 						clock-lanes = <0>;
+@@ -975,6 +981,9 @@
+ 				compatible = "ovti,ov106xx";
+ 				reg = <0x62>;
+ 
++				maxim,fixed-sensor = "ov490";
++				maxim,width = <1280>;
++				maxim,height = <966>;
+ 				port@0 {
+ 					ov106xx_in2: endpoint {
+ 						clock-lanes = <0>;
+@@ -996,6 +1005,9 @@
+ 				compatible = "ovti,ov106xx";
+ 				reg = <0x63>;
+ 
++				maxim,fixed-sensor = "ov490";
++				maxim,width = <1280>;
++				maxim,height = <966>;
+ 				port@0 {
+ 					ov106xx_in3: endpoint {
+ 						clock-lanes = <0>;
+@@ -1067,8 +1079,9 @@
+ 				maxim,sensor_delay = <350>;
+ 				maxim,links = <4>;
+ 				maxim,lanes = <4>;
+-				maxim,resetb-gpio = <1>;
+-				maxim,fsync-mode = "automatic";
++				maxim,resetb-gpio = <4>;
++				maxim,resetb-active-high;
++				maxim,fsync-mode = "manual";
+ 				maxim,timeout = <100>;
+ 
+ 				port@0 {
+diff --git a/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-view.dts b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-view.dts
+index d5e244d..39a35d1 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-view.dts
++++ b/arch/arm64/boot/dts/renesas/r8a7796-m3ulcb-view.dts
+@@ -382,6 +382,9 @@
+ 		compatible = "ovti,ov106xx";
+ 		reg = <0x60>;
+ 
++		maxim,fixed-sensor = "ov490";
++		maxim,width = <1280>;
++		maxim,height = <966>;
+ 		port@0 {
+ 			ov106xx_in0: endpoint {
+ 				clock-lanes = <0>;
+@@ -400,6 +403,9 @@
+ 		compatible = "ovti,ov106xx";
+ 		reg = <0x61>;
+ 
++		maxim,fixed-sensor = "ov490";
++		maxim,width = <1280>;
++		maxim,height = <966>;
+ 		port@0 {
+ 			ov106xx_in1: endpoint {
+ 				clock-lanes = <0>;
+@@ -418,6 +424,9 @@
+ 		compatible = "ovti,ov106xx";
+ 		reg = <0x62>;
+ 
++		maxim,fixed-sensor = "ov490";
++		maxim,width = <1280>;
++		maxim,height = <966>;
+ 		port@0 {
+ 			ov106xx_in2: endpoint {
+ 				clock-lanes = <0>;
+@@ -436,6 +445,9 @@
+ 		compatible = "ovti,ov106xx";
+ 		reg = <0x63>;
+ 
++		maxim,fixed-sensor = "ov490";
++		maxim,width = <1280>;
++		maxim,height = <966>;
+ 		port@0 {
+ 			ov106xx_in3: endpoint {
+ 				clock-lanes = <0>;
+@@ -457,8 +469,9 @@
+ 		maxim,sensor_delay = <0>;
+ 		maxim,links = <4>;
+ 		maxim,lanes = <4>;
+-		maxim,resetb-gpio = <1>;
+-		maxim,fsync-mode = "automatic";
++		maxim,resetb-gpio = <4>;
++		maxim,resetb-active-high;
++		maxim,fsync-mode = "manual";
+ 		maxim,timeout = <100>;
+ 		maxim,i2c-quirk = <0x6c>;
+ 
+diff --git a/arch/arm64/boot/dts/renesas/r8a7796-salvator-x-view.dts b/arch/arm64/boot/dts/renesas/r8a7796-salvator-x-view.dts
+index 1778c58..8cdb221 100644
+--- a/arch/arm64/boot/dts/renesas/r8a7796-salvator-x-view.dts
++++ b/arch/arm64/boot/dts/renesas/r8a7796-salvator-x-view.dts
+@@ -587,6 +587,9 @@
+ 		compatible = "ovti,ov106xx";
+ 		reg = <0x60>;
+ 
++		maxim,fixed-sensor = "ov490";
++		maxim,width = <1280>;
++		maxim,height = <966>;
+ 		port@0 {
+ 			ov106xx_in0: endpoint {
+ 				clock-lanes = <0>;
+@@ -605,6 +608,9 @@
+ 		compatible = "ovti,ov106xx";
+ 		reg = <0x61>;
+ 
++		maxim,fixed-sensor = "ov490";
++		maxim,width = <1280>;
++		maxim,height = <966>;
+ 		port@0 {
+ 			ov106xx_in1: endpoint {
+ 				clock-lanes = <0>;
+@@ -623,6 +629,9 @@
+ 		compatible = "ovti,ov106xx";
+ 		reg = <0x62>;
+ 
++		maxim,fixed-sensor = "ov490";
++		maxim,width = <1280>;
++		maxim,height = <966>;
+ 		port@0 {
+ 			ov106xx_in2: endpoint {
+ 				clock-lanes = <0>;
+@@ -641,6 +650,9 @@
+ 		compatible = "ovti,ov106xx";
+ 		reg = <0x63>;
+ 
++		maxim,fixed-sensor = "ov490";
++		maxim,width = <1280>;
++		maxim,height = <966>;
+ 		port@0 {
+ 			ov106xx_in3: endpoint {
+ 				clock-lanes = <0>;
+@@ -662,8 +674,9 @@
+ 		maxim,sensor_delay = <0>;
+ 		maxim,links = <4>;
+ 		maxim,lanes = <4>;
+-		maxim,resetb-gpio = <1>;
+-		maxim,fsync-mode = "automatic";
++		maxim,resetb-gpio = <4>;
++		maxim,resetb-active-high;
++		maxim,fsync-mode = "manual";
+ 		maxim,timeout = <100>;
+ 		maxim,i2c-quirk = <0x6c>;
+ 
+-- 
+1.9.1
+
