@@ -59,6 +59,7 @@ SRC_URI_append = " \
     file://0058-arm64-renesas-M3ULCB-Kingfisher-board-support.patch \
     ${@base_conditional("LVDSCAMERA_FIRST4_TYPE1", "1", " file://0070-arm64-dts-Gen3-view-boards-TYPE1-first-4-cameras.patch", "", d)} \
     ${@base_conditional("LVDSCAMERA_FIRST4_TYPE2", "1", " file://0071-arm64-dts-Gen3-view-boards-TYPE2-first-4-cameras.patch", "", d)} \
+    ${@base_conditional("LVDSCAMERA_SECOND4_TYPE1", "1", " file://0072-arm64-dts-Gen3-view-boards-TYPE1-second-4-cameras.patch", "", d)} \
     ${@base_conditional("RAVB_DEBUG", "1", " file://0080-net-ethernet-renesas-ravb-packets-dump.patch", "", d)} \
 "
 
