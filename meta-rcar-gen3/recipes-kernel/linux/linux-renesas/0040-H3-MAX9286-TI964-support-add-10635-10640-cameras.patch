@@ -3719,7 +3719,7 @@ new file mode 100644
 index 0000000..0b4ba70
 --- /dev/null
 +++ b/drivers/media/i2c/soc_camera/ov490_ov10640.h
-@@ -0,0 +1,32 @@
+@@ -0,0 +1,33 @@
 +/*
 + * OmniVision ov490-ov10640 sensor camera wizard 1280x1080@30/UYVY/BT601/8bit
 + *
@@ -3737,6 +3737,7 @@ index 0000000..0b4ba70
 +};
 +
 +static const struct ov490_reg ov490_regs_wizard[] = {
++/* The following registers should match firmware */
 +{0xfffd, 0x80},
 +{0xfffe, 0x82},
 +{0x0071, 0x11},
@@ -3747,10 +3748,10 @@ index 0000000..0b4ba70
 +{0xfffe, 0x28},
 +{0x6000, 0x04},
 +{0x6004, 0x00},
-+{0x6008, 0x00}, // retain PCLK polarity
++{0x6008, 0x00}, // PCLK polarity - useless due to silicon bug -> use 0x808000bb register
 +{0xfffe, 0x80},
 +{0x0091, 0x00},
-+{0x00bb, 0x15}, // bit[3]=0 - PCLK polarity workaround
++{0x00bb, 0x1d}, // bit[3]=0 - PCLK polarity workaround
 +};
 diff --git a/drivers/media/i2c/soc_camera/ti964_ti913.c b/drivers/media/i2c/soc_camera/ti964_ti913.c
 new file mode 100644
